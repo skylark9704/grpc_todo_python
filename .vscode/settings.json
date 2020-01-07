@@ -1,0 +1,6 @@
+{
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "/Users/sushant/.pyenv/versions/3.6.2/bin/python"
+}
