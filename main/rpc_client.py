@@ -35,8 +35,8 @@ def app():
                 print(response.message)
 
             elif choice == 2:
-                _id = input('Enter ID : ')
-                response = stub.ListTodo(todos_pb2.ListTodoRequest(id=_id))
+                id = input('Enter ID : ')
+                response = stub.ListTodo(todos_pb2.ListTodoRequest(id=id))
 
                 if response.data:
                     print(format_todo(response.data))
@@ -52,18 +52,18 @@ def app():
                         print(todo.message)
 
             elif choice == 4:
-                _id = input('Enter ID : ')
+                id = input('Enter ID : ')
                 response = stub.ToggleStatus(
-                    todos_pb2.ToggleStatusRequest(id=_id))
+                    todos_pb2.ToggleStatusRequest(id=id))
                 print(response.message)
 
             elif choice == 5:
-                _id = input('Enter ID : ')
+                id = input('Enter ID : ')
                 title = input('Title : ')
                 description = input('Description : ')
                 response = stub.EditTodo(
                     todos_pb2.EditTodoRequest(
-                        id=_id,
+                        id=id,
                         title=title,
                         description=description
                     )
@@ -71,14 +71,13 @@ def app():
                 print(response.message)
 
             elif choice == 6:
-                _id = input('Enter ID : ')
-                response = stub.DeleteTodo(todos_pb2.DeleteTodoRequest(id=_id))
+                id = input('Enter ID : ')
+                response = stub.DeleteTodo(todos_pb2.DeleteTodoRequest(id=id))
                 print(response.message)
 
 
 def format_todo(todo):
     formatted_todo = json.loads(todo)
-    print('Format TODO')
     return """
     {}. {}, [{}] | Date : {}
     _______________________________
@@ -87,8 +86,8 @@ def format_todo(todo):
     """.format(
         formatted_todo["id"],
         formatted_todo["title"],
-        formatted_todo["status"],
-        formatted_todo["date"],
+        "Completed" if formatted_todo["status"] == "1" else "Incomplete",
+        formatted_todo["created"],
         formatted_todo["description"]
     )
 

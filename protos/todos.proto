@@ -14,8 +14,7 @@ service Todo {
 message SaveTodoRequest{
     string title = 1;
     string description = 2;
-    string date = 3;
-    string status = 4;
+    string status = 3;
 }
 
 message ListTodoRequest {

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='todo',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0btodos.proto\x12\x04todo\"S\n\x0fSaveTodoRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0e\n\x06status\x18\x04 \x01(\t\"\x1d\n\x0fListTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"1\n\x10ListTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\x14\n\x12ListAllTodoRequest\"4\n\x13ListAllTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\x1f\n\x11\x44\x65leteTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"A\n\x0f\x45\x64itTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"!\n\x13ToggleStatusRequest\x12\n\n\x02id\x18\x01 \x01(\t\"-\n\x0cTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xfb\x02\n\x04Todo\x12\x37\n\x08SaveTodo\x12\x15.todo.SaveTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12;\n\x08ListTodo\x12\x15.todo.ListTodoRequest\x1a\x16.todo.ListTodoResponse\"\x00\x12\x46\n\x0bListAllTodo\x12\x18.todo.ListAllTodoRequest\x1a\x19.todo.ListAllTodoResponse\"\x00\x30\x01\x12;\n\nDeleteTodo\x12\x17.todo.DeleteTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12\x37\n\x08\x45\x64itTodo\x12\x15.todo.EditTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12?\n\x0cToggleStatus\x12\x19.todo.ToggleStatusRequest\x1a\x12.todo.TodoResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0btodos.proto\x12\x04todo\"E\n\x0fSaveTodoRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0e\n\x06status\x18\x03 \x01(\t\"\x1d\n\x0fListTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"1\n\x10ListTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\x14\n\x12ListAllTodoRequest\"4\n\x13ListAllTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\x1f\n\x11\x44\x65leteTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\"A\n\x0f\x45\x64itTodoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\"!\n\x13ToggleStatusRequest\x12\n\n\x02id\x18\x01 \x01(\t\"-\n\x0cTodoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xfb\x02\n\x04Todo\x12\x37\n\x08SaveTodo\x12\x15.todo.SaveTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12;\n\x08ListTodo\x12\x15.todo.ListTodoRequest\x1a\x16.todo.ListTodoResponse\"\x00\x12\x46\n\x0bListAllTodo\x12\x18.todo.ListAllTodoRequest\x1a\x19.todo.ListAllTodoResponse\"\x00\x30\x01\x12;\n\nDeleteTodo\x12\x17.todo.DeleteTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12\x37\n\x08\x45\x64itTodo\x12\x15.todo.EditTodoRequest\x1a\x12.todo.TodoResponse\"\x00\x12?\n\x0cToggleStatus\x12\x19.todo.ToggleStatusRequest\x1a\x12.todo.TodoResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -48,15 +48,8 @@ _SAVETODOREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='date', full_name='todo.SaveTodoRequest.date', index=2,
+      name='status', full_name='todo.SaveTodoRequest.status', index=2,
       number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='status', full_name='todo.SaveTodoRequest.status', index=3,
-      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -74,7 +67,7 @@ _SAVETODOREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=21,
-  serialized_end=104,
+  serialized_end=90,
 )
 
 
@@ -104,8 +97,8 @@ _LISTTODOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=106,
-  serialized_end=135,
+  serialized_start=92,
+  serialized_end=121,
 )
 
 
@@ -142,8 +135,8 @@ _LISTTODORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=137,
-  serialized_end=186,
+  serialized_start=123,
+  serialized_end=172,
 )
 
 
@@ -166,8 +159,8 @@ _LISTALLTODOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=188,
-  serialized_end=208,
+  serialized_start=174,
+  serialized_end=194,
 )
 
 
@@ -204,8 +197,8 @@ _LISTALLTODORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=210,
-  serialized_end=262,
+  serialized_start=196,
+  serialized_end=248,
 )
 
 
@@ -235,8 +228,8 @@ _DELETETODOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=264,
-  serialized_end=295,
+  serialized_start=250,
+  serialized_end=281,
 )
 
 
@@ -280,8 +273,8 @@ _EDITTODOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=297,
-  serialized_end=362,
+  serialized_start=283,
+  serialized_end=348,
 )
 
 
@@ -311,8 +304,8 @@ _TOGGLESTATUSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=364,
-  serialized_end=397,
+  serialized_start=350,
+  serialized_end=383,
 )
 
 
@@ -349,8 +342,8 @@ _TODORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=399,
-  serialized_end=444,
+  serialized_start=385,
+  serialized_end=430,
 )
 
 DESCRIPTOR.message_types_by_name['SaveTodoRequest'] = _SAVETODOREQUEST
@@ -435,8 +428,8 @@ _TODO = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=447,
-  serialized_end=826,
+  serialized_start=433,
+  serialized_end=812,
   methods=[
   _descriptor.MethodDescriptor(
     name='SaveTodo',
