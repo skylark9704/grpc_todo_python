@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.curdir)
-
 import grpc
 from todo.rpcs import todos_pb2
 from todo.rpcs import todos_pb2_grpc

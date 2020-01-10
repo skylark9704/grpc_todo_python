@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.curdir)
-
 from contextlib import contextmanager
 from concurrent import futures
 from todo.db.models.Todo import Todo
@@ -24,7 +20,7 @@ class TodoService(todos_pb2_grpc.TodoServiceServicer):
         )
 
         status = todos_pb2.OperationErrors()
-        
+
         with session_scope() as session:
             session.add(todo)
             status.code = todos_pb2.Status.Value('OK')
@@ -97,7 +93,8 @@ class TodoService(todos_pb2_grpc.TodoServiceServicer):
             if todo:
                 description, title = request.todo
                 todo.title = todo.title if title == "" else title
-                todo.description = todo.description if description == "" else description
+                todo.description = todo.description if description == "" \
+                    else description
 
                 status.code = todos_pb2.Status.Value('UPDATED')
                 status.errors.extend(
