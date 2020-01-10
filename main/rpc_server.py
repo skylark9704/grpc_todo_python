@@ -1,111 +1,164 @@
 import sys
 import os
 sys.path.insert(0, os.curdir)
-import todos_pb2_grpc
-import todos_pb2
-import grpc
-from datetime import datetime
-import json
-from db.db import Session, engine
-from db.models.Todo import Todo
-from collections import namedtuple, OrderedDict
-from concurrent import futures
+
 from contextlib import contextmanager
+from concurrent import futures
+from db.models.Todo import Todo
+from db.db import Session
+import grpc
+import todos_pb2
+import todos_pb2_grpc
 
 
-class TodoService(todos_pb2_grpc.TodoServicer):
+class TodoService(todos_pb2_grpc.TodoServiceServicer):
 
     def __init__(self):
-        self.session = Session()
+        pass
 
     def SaveTodo(self, request, context):
         todo = Todo(
-            title=request.title,
-            description=request.description
+            title=request.todo.title,
+            description=request.todo.description,
         )
+        print(todo)
         with session_scope() as session:
+            print("Adding Todo")
             session.add(todo)
             session.commit()
-            return todos_pb2.TodoResponse(message="Saved")
+            return todos_pb2.TodoResponse(status=todos_pb2.Status.Name(0))
 
     def ListTodo(self, request, context):
-        id = int(request.id)
+        id = request.id
 
         with session_scope() as session:
             row = session.query(Todo).get(id)
+            status = todos_pb2.OperationErrors()
             if row:
-                print(row2dict(row))
-                return todos_pb2.ListTodoResponse(
-                    data=json.dumps(row2dict(row)).encode('utf-8')
+                todo = todos_pb2.Todo()
+                todo.id = row.id
+                todo.title = row.title
+                todo.description = row.description
+                todo.status = row.status
+                todo.created_at.FromDatetime(row.created),
+                todo.updated_at.FromDatetime(row.updated)
+
+                status.code = todos_pb2.Status.Value('OK')
+                status.errors.extend(["OK"])
+
+                return todos_pb2.TodoResponse(
+                    todo=todo, status=status
                 )
             else:
-                return todos_pb2.ListTodoResponse(message='No Todo Found')
+                status.code = todos_pb2.Status.Value('NOT_FOUND')
+                status.errors.extend(
+                    ["Specified ID does not Exist in the Database"]
+                )
+                return todos_pb2.TodoResponse(
+                    status=status
+                )
 
     def ListAllTodo(self, request, context):
         with session_scope() as session:
             todos = session.query(Todo).order_by(Todo.id)
+
             if not todos:
-                yield todos_pb2.ListAllTodoResponse(message="No Todos found")
-            for todo in todos:
+                status = todos_pb2.OperationErrors()
+                status.code = todos_pb2.Status.Value('NOT_FOUND')
+                status.errors.extend(
+                    ["No Todo entries found in the Database"]
+                )
                 yield todos_pb2.ListAllTodoResponse(
-                    data=json.dumps(row2dict(todo)).encode('utf-8')
+                    status=status
                 )
 
+            else:
+                for _todo in todos:
+                    todo = todos_pb2.Todo()
+                    todo.id = _todo.id
+                    todo.title = _todo.title
+                    todo.description = _todo.description
+                    todo.status = _todo.status
+                    todo.created_at.FromDatetime(_todo.created),
+                    todo.updated_at.FromDatetime(_todo.updated)
+
+                    yield todos_pb2.ListAllTodoResponse(
+                        todo=todo
+                    )
+
     def EditTodo(self, request, context):
-        id = int(request.id)
+        id = request.todo.id
 
         with session_scope() as session:
             todo = session.query(Todo).get(id)
+            status = todos_pb2.OperationErrors()
             if todo:
-                todo.title = todo.title if request.title == "" else request.title
-                todo.description = todo.description if request.description == "" else request.description
-                session.commit()
-                return todos_pb2.TodoResponse(message='Update Successful')
+                todo.title = todo.title if request.todo.title == "" else request.todo.title
+                todo.description = todo.description if request.todo.description == "" else request.todo.description
 
-        return todos_pb2.TodoResponse(message="No Todo found with that ID")
+                status.code = todos_pb2.Status.Value('UPDATED')
+                status.errors.extend(
+                    ["Successfully Updated Entry"]
+                )
+
+                return todos_pb2.TodoResponse(
+                    status=status
+                )
+            status.code = todos_pb2.Status.Value('NOT_FOUND')
+            status.errors.extend(
+                ["Specified ID does not Exist in the Database"]
+            )
+            return todos_pb2.TodoResponse(
+                status=status
+            )
 
     def DeleteTodo(self, request, context):
-        id = int(request.id)
+        id = request.id
 
         with session_scope() as session:
             todo = session.query(Todo).get(id)
+            status = todos_pb2.OperationErrors()
             if todo:
                 session.delete(todo)
-                session.commit()
-                return todos_pb2.TodoResponse(message="Deleted")
+                status.code = todos_pb2.Status.Value('DELETED')
+                return todos_pb2.TodoResponse(
+                    status=status
+                )
             else:
-                return todos_pb2.TodoResponse(message="Todo Does Not Exist")
+                status.code = todos_pb2.Status.Value('NOT_FOUND')
+                status.errors.extend(
+                    ["Specified ID does not Exist in the Database"]
+                )
+                return todos_pb2.TodoResponse(
+                    status=status
+                )
 
     def ToggleStatus(self, request, context):
-        id = int(request.id)
-
+        id = request.id
         with session_scope() as session:
             todo = session.query(Todo).get(id)
+            status = todos_pb2.OperationErrors()
             if todo:
+                status.code = todos_pb2.Status.Value('UPDATED')
                 if todo.status:
                     todo.status = 0
-                    session.commit()
+
                     return todos_pb2.TodoResponse(
-                        message="Status Changed to [INCOMPLETE]"
+                        status=status
                     )
 
                 todo.status = 1
-                session.commit()
+
                 return todos_pb2.TodoResponse(
-                    message="Status Changed to [COMPLETE]"
+                    status=status
                 )
-
+        status.code = todos_pb2.Status.Value('NOT_FOUND')
+        status.errors.extend(
+                    ["Specified ID does not Exist in the Database"]
+                )
         return todos_pb2.TodoResponse(
-            message="No Todo with specified ID found"
+            status=status
         )
-
-
-def row2dict(row):
-    d = {}
-    for column in row.__table__.columns:
-        d[column.name] = str(getattr(row, column.name))
-
-    return d
 
 
 @contextmanager
@@ -115,8 +168,7 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except(e):
-        print(e)
+    except:
         session.rollback()
         raise
     finally:
@@ -125,7 +177,7 @@ def session_scope():
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    todos_pb2_grpc.add_TodoServicer_to_server(TodoService(), server)
+    todos_pb2_grpc.add_TodoServiceServicer_to_server(TodoService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
