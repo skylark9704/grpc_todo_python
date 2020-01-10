@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, VARCHAR, TIMESTAMP, SMALLINT
-from db.db import Base
+from todo.db.db import Base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 

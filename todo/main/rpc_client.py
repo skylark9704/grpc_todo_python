@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.insert(0, os.curdir)
+
 import grpc
-import todos_pb2
-import todos_pb2_grpc
+from todo.rpcs import todos_pb2
+from todo.rpcs import todos_pb2_grpc
 
 
 def app():
@@ -33,7 +37,7 @@ def app():
                 response = stub.SaveTodo(todos_pb2.SaveTodoRequest(
                     todo=todo
                 ))
-                print(response.status)
+                print(response.status.code)
 
             elif choice == 2:
                 id = int(input('Enter ID : '))
@@ -75,12 +79,12 @@ def app():
                         todo=todo
                     )
                 )
-                print(response.status)
+                print(response.status.code)
 
             elif choice == 6:
                 id = int(input('Enter ID : '))
                 response = stub.DeleteTodo(todos_pb2.DeleteTodoRequest(id=id))
-                print(response.status)
+                print(response.status.code)
 
 
 def format_todo(todo):

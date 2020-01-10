@@ -4,11 +4,12 @@ sys.path.insert(0, os.curdir)
 
 from contextlib import contextmanager
 from concurrent import futures
-from db.models.Todo import Todo
-from db.db import Session
+from todo.db.models.Todo import Todo
+from todo.db.db import Session
 import grpc
-import todos_pb2
-import todos_pb2_grpc
+
+from todo.rpcs import todos_pb2
+from todo.rpcs import todos_pb2_grpc
 
 
 class TodoService(todos_pb2_grpc.TodoServiceServicer):
@@ -21,12 +22,13 @@ class TodoService(todos_pb2_grpc.TodoServiceServicer):
             title=request.todo.title,
             description=request.todo.description,
         )
-        print(todo)
+
+        status = todos_pb2.OperationErrors()
+        
         with session_scope() as session:
-            print("Adding Todo")
             session.add(todo)
-            session.commit()
-            return todos_pb2.TodoResponse(status=todos_pb2.Status.Name(0))
+            status.code = todos_pb2.Status.Value('OK')
+            return todos_pb2.TodoResponse(status=status)
 
     def ListTodo(self, request, context):
         id = request.id
@@ -93,8 +95,9 @@ class TodoService(todos_pb2_grpc.TodoServiceServicer):
             todo = session.query(Todo).get(id)
             status = todos_pb2.OperationErrors()
             if todo:
-                todo.title = todo.title if request.todo.title == "" else request.todo.title
-                todo.description = todo.description if request.todo.description == "" else request.todo.description
+                description, title = request.todo
+                todo.title = todo.title if title == "" else title
+                todo.description = todo.description if description == "" else description
 
                 status.code = todos_pb2.Status.Value('UPDATED')
                 status.errors.extend(
@@ -168,7 +171,7 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except:
+    except Exception as e:
         session.rollback()
         raise
     finally:
