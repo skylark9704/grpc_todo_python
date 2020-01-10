@@ -1,5 +1,4 @@
 import grpc
-import json
 import todos_pb2
 import todos_pb2_grpc
 
@@ -17,7 +16,7 @@ def app():
     """)
 
     with grpc.insecure_channel('localhost:50051') as channel:
-        stub = todos_pb2_grpc.TodoStub(channel)
+        stub = todos_pb2_grpc.TodoServiceStub(channel)
 
         while True:
             choice = int(input('Choice : '))
@@ -28,68 +27,75 @@ def app():
             elif choice == 1:
                 title = input("Enter Title : ")
                 description = input("Enter Description : ")
+                todo = todos_pb2.Todo()
+                todo.title = title
+                todo.description = description
                 response = stub.SaveTodo(todos_pb2.SaveTodoRequest(
-                    title=title,
-                    description=description
+                    todo=todo
                 ))
-                print(response.message)
+                print(response.status)
 
             elif choice == 2:
-                _id = input('Enter ID : ')
-                response = stub.ListTodo(todos_pb2.ListTodoRequest(id=_id))
+                id = int(input('Enter ID : '))
+                response = stub.ListTodo(todos_pb2.ListTodoRequest(id=id))
 
-                if response.data:
-                    print(format_todo(response.data))
-                else:
-                    print(response.message)
+                if response.status.code == todos_pb2.Status.Value('OK'):
+                    print(format_todo(response.todo))
+
+                elif response.status.code == todos_pb2.Status.Value(
+                    'NOT_FOUND'
+                ):
+                    print(response.status.code, response.status.errors)
 
             elif choice == 3:
                 todos = stub.ListAllTodo(todos_pb2.ListAllTodoRequest())
                 for todo in todos:
-                    if todo.data:
-                        print(format_todo(todo.data))
+                    if todo.todo:
+                        print(format_todo(todo.todo))
                     else:
-                        print(todo.message)
+                        print(todo.status.code)
+                        print(todo.status.errors)
 
             elif choice == 4:
-                _id = input('Enter ID : ')
+                id = int(input('Enter ID : '))
                 response = stub.ToggleStatus(
-                    todos_pb2.ToggleStatusRequest(id=_id))
-                print(response.message)
+                    todos_pb2.ToggleStatusRequest(id=id))
+                print(response.status)
 
             elif choice == 5:
-                _id = input('Enter ID : ')
+                id = int(input('Enter ID : '))
                 title = input('Title : ')
                 description = input('Description : ')
+                todo = todos_pb2.Todo()
+                todo.id = id
+                todo.title = title
+                todo.description = description
                 response = stub.EditTodo(
                     todos_pb2.EditTodoRequest(
-                        id=_id,
-                        title=title,
-                        description=description
+                        todo=todo
                     )
                 )
-                print(response.message)
+                print(response.status)
 
             elif choice == 6:
-                _id = input('Enter ID : ')
-                response = stub.DeleteTodo(todos_pb2.DeleteTodoRequest(id=_id))
-                print(response.message)
+                id = int(input('Enter ID : '))
+                response = stub.DeleteTodo(todos_pb2.DeleteTodoRequest(id=id))
+                print(response.status)
 
 
 def format_todo(todo):
-    formatted_todo = json.loads(todo)
-    print('Format TODO')
     return """
-    {}. {}, [{}] | Date : {}
+    {}. {}, [{}] | Date : {} | Last Updt : {}
     _______________________________
 
     {}
     """.format(
-        formatted_todo["id"],
-        formatted_todo["title"],
-        formatted_todo["status"],
-        formatted_todo["date"],
-        formatted_todo["description"]
+        todo.id,
+        todo.title,
+        "Completed" if todo.status == 1 else "Incomplete",
+        todo.created_at.ToDatetime(),
+        todo.updated_at.ToDatetime(),
+        todo.description
     )
 
 

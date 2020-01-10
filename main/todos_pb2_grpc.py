@@ -4,7 +4,7 @@ import grpc
 import todos_pb2 as todos__pb2
 
 
-class TodoStub(object):
+class TodoServiceStub(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -15,38 +15,38 @@ class TodoStub(object):
       channel: A grpc.Channel.
     """
     self.SaveTodo = channel.unary_unary(
-        '/todo.Todo/SaveTodo',
+        '/todo.TodoService/SaveTodo',
         request_serializer=todos__pb2.SaveTodoRequest.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.ListTodo = channel.unary_unary(
-        '/todo.Todo/ListTodo',
+        '/todo.TodoService/ListTodo',
         request_serializer=todos__pb2.ListTodoRequest.SerializeToString,
-        response_deserializer=todos__pb2.ListTodoResponse.FromString,
+        response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.ListAllTodo = channel.unary_stream(
-        '/todo.Todo/ListAllTodo',
+        '/todo.TodoService/ListAllTodo',
         request_serializer=todos__pb2.ListAllTodoRequest.SerializeToString,
         response_deserializer=todos__pb2.ListAllTodoResponse.FromString,
         )
     self.DeleteTodo = channel.unary_unary(
-        '/todo.Todo/DeleteTodo',
+        '/todo.TodoService/DeleteTodo',
         request_serializer=todos__pb2.DeleteTodoRequest.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.EditTodo = channel.unary_unary(
-        '/todo.Todo/EditTodo',
+        '/todo.TodoService/EditTodo',
         request_serializer=todos__pb2.EditTodoRequest.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.ToggleStatus = channel.unary_unary(
-        '/todo.Todo/ToggleStatus',
+        '/todo.TodoService/ToggleStatus',
         request_serializer=todos__pb2.ToggleStatusRequest.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
 
 
-class TodoServicer(object):
+class TodoServiceServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -93,7 +93,7 @@ class TodoServicer(object):
     raise NotImplementedError('Method not implemented!')
 
 
-def add_TodoServicer_to_server(servicer, server):
+def add_TodoServiceServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'SaveTodo': grpc.unary_unary_rpc_method_handler(
           servicer.SaveTodo,
@@ -103,7 +103,7 @@ def add_TodoServicer_to_server(servicer, server):
       'ListTodo': grpc.unary_unary_rpc_method_handler(
           servicer.ListTodo,
           request_deserializer=todos__pb2.ListTodoRequest.FromString,
-          response_serializer=todos__pb2.ListTodoResponse.SerializeToString,
+          response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
       'ListAllTodo': grpc.unary_stream_rpc_method_handler(
           servicer.ListAllTodo,
@@ -127,5 +127,5 @@ def add_TodoServicer_to_server(servicer, server):
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
-      'todo.Todo', rpc_method_handlers)
+      'todo.TodoService', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))

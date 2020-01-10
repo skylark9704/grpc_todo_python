@@ -1,10 +1,11 @@
 syntax = "proto3";
-
 package todo;
 
-service Todo {
+import "google/protobuf/timestamp.proto";
+
+service TodoService {
     rpc SaveTodo(SaveTodoRequest) returns (TodoResponse) {}
-    rpc ListTodo(ListTodoRequest) returns (ListTodoResponse) {}
+    rpc ListTodo(ListTodoRequest) returns (TodoResponse) {}
     rpc ListAllTodo(ListAllTodoRequest) returns (stream ListAllTodoResponse) {}
     rpc DeleteTodo(DeleteTodoRequest) returns (TodoResponse) {}
     rpc EditTodo(EditTodoRequest) returns (TodoResponse) {}
@@ -12,43 +13,55 @@ service Todo {
 }
 
 message SaveTodoRequest{
-    string title = 1;
-    string description = 2;
-    string date = 3;
-    string status = 4;
+    Todo todo = 1;
 }
 
 message ListTodoRequest {
-    string id = 1;
-}
-
-message ListTodoResponse {
-    string message = 1;
-    string data = 2;
+    int32 id = 1;
 }
 
 message ListAllTodoRequest {}
 
 message ListAllTodoResponse {
-    string message = 1;
-    string data = 2;
+    OperationErrors status = 1;
+    Todo todo = 2;
 }
 
 message DeleteTodoRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message EditTodoRequest {
-    string id = 1;
-    string title = 2;
-    string description = 3;
+    Todo todo = 1;
 }
 
 message ToggleStatusRequest {
-    string id = 1;
+    int32 id = 1;
 }
 
 message TodoResponse {
-    string message = 1;
-    string data = 2;
+    OperationErrors status = 1;
+    Todo todo = 2;
+}
+
+message Todo {
+    int32 id = 1;
+    string title = 2;
+    string description = 3;
+    int32 status = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message OperationErrors {
+    Status code = 1;
+    repeated string errors = 2;
+}
+
+enum Status {
+    OK = 0;
+    ERROR = 1;
+    NOT_FOUND = 2;
+    UPDATED = 4;
+    DELETED = 5;
 }
