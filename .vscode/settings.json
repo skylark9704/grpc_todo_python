@@ -1,6 +1,8 @@
 {
     "python.linting.pylintEnabled": false,
-    "python.linting.pycodestyleEnabled": true,
+    "python.linting.pycodestyleEnabled": false,
     "python.linting.enabled": true,
-    "python.pythonPath": "/Users/sushant/.pyenv/versions/3.6.2/bin/python"
+    "python.pythonPath": "/Users/sushant/.pyenv/versions/3.6.2/bin/python",
+    "python.linter": "flake8",
+    "python.linting.flake8Enabled": true
 }

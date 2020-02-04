@@ -1,3 +1,9 @@
+# flake8:noqa
+import os
+import sys
+sys.path.insert(0, os.curdir)
+
+from database.models.Todo import Todo, Base
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,12 +11,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import os
-import sys
-sys.path.insert(0, os.curdir)
 
-from db.db import Base
-from db.models.Todo import Todo
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

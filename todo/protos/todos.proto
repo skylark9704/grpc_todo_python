@@ -4,39 +4,19 @@ package todo;
 import "google/protobuf/timestamp.proto";
 
 service TodoService {
-    rpc SaveTodo(SaveTodoRequest) returns (TodoResponse) {}
-    rpc ListTodo(ListTodoRequest) returns (TodoResponse) {}
-    rpc ListAllTodo(ListAllTodoRequest) returns (stream ListAllTodoResponse) {}
-    rpc DeleteTodo(DeleteTodoRequest) returns (TodoResponse) {}
-    rpc EditTodo(EditTodoRequest) returns (TodoResponse) {}
-    rpc ToggleStatus(ToggleStatusRequest) returns (TodoResponse) {}
+    rpc AddTodo(Todo) returns (TodoResponse) {}
+    rpc GetTodo(Todo) returns (TodoResponse) {}
+    rpc ListAllTodo(EmptyRequest) returns (stream ListAllTodoResponse) {}
+    rpc DeleteTodo(Todo) returns (TodoResponse) {}
+    rpc EditTodo(Todo) returns (TodoResponse) {}
+    rpc ToggleStatus(Todo) returns (TodoResponse) {}
 }
 
-message SaveTodoRequest{
-    Todo todo = 1;
-}
-
-message ListTodoRequest {
-    int32 id = 1;
-}
-
-message ListAllTodoRequest {}
+message EmptyRequest {}
 
 message ListAllTodoResponse {
     OperationErrors status = 1;
     Todo todo = 2;
-}
-
-message DeleteTodoRequest {
-    int32 id = 1;
-}
-
-message EditTodoRequest {
-    Todo todo = 1;
-}
-
-message ToggleStatusRequest {
-    int32 id = 1;
 }
 
 message TodoResponse {
@@ -48,7 +28,7 @@ message Todo {
     int32 id = 1;
     string title = 2;
     string description = 3;
-    int32 status = 4;
+    TodoStatus status = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
 }
@@ -64,4 +44,10 @@ enum Status {
     NOT_FOUND = 2;
     UPDATED = 4;
     DELETED = 5;
+}
+
+enum TodoStatus {
+    NEW = 0;
+    PROGRESS = 1;
+    COMPLETED = 2;
 }

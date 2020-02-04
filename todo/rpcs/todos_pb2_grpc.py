@@ -14,34 +14,34 @@ class TodoServiceStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.SaveTodo = channel.unary_unary(
-        '/todo.TodoService/SaveTodo',
-        request_serializer=todos__pb2.SaveTodoRequest.SerializeToString,
+    self.AddTodo = channel.unary_unary(
+        '/todo.TodoService/AddTodo',
+        request_serializer=todos__pb2.Todo.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
-    self.ListTodo = channel.unary_unary(
-        '/todo.TodoService/ListTodo',
-        request_serializer=todos__pb2.ListTodoRequest.SerializeToString,
+    self.GetTodo = channel.unary_unary(
+        '/todo.TodoService/GetTodo',
+        request_serializer=todos__pb2.Todo.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.ListAllTodo = channel.unary_stream(
         '/todo.TodoService/ListAllTodo',
-        request_serializer=todos__pb2.ListAllTodoRequest.SerializeToString,
+        request_serializer=todos__pb2.EmptyRequest.SerializeToString,
         response_deserializer=todos__pb2.ListAllTodoResponse.FromString,
         )
     self.DeleteTodo = channel.unary_unary(
         '/todo.TodoService/DeleteTodo',
-        request_serializer=todos__pb2.DeleteTodoRequest.SerializeToString,
+        request_serializer=todos__pb2.Todo.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.EditTodo = channel.unary_unary(
         '/todo.TodoService/EditTodo',
-        request_serializer=todos__pb2.EditTodoRequest.SerializeToString,
+        request_serializer=todos__pb2.Todo.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
     self.ToggleStatus = channel.unary_unary(
         '/todo.TodoService/ToggleStatus',
-        request_serializer=todos__pb2.ToggleStatusRequest.SerializeToString,
+        request_serializer=todos__pb2.Todo.SerializeToString,
         response_deserializer=todos__pb2.TodoResponse.FromString,
         )
 
@@ -50,14 +50,14 @@ class TodoServiceServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def SaveTodo(self, request, context):
+  def AddTodo(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ListTodo(self, request, context):
+  def GetTodo(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -95,34 +95,34 @@ class TodoServiceServicer(object):
 
 def add_TodoServiceServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'SaveTodo': grpc.unary_unary_rpc_method_handler(
-          servicer.SaveTodo,
-          request_deserializer=todos__pb2.SaveTodoRequest.FromString,
+      'AddTodo': grpc.unary_unary_rpc_method_handler(
+          servicer.AddTodo,
+          request_deserializer=todos__pb2.Todo.FromString,
           response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
-      'ListTodo': grpc.unary_unary_rpc_method_handler(
-          servicer.ListTodo,
-          request_deserializer=todos__pb2.ListTodoRequest.FromString,
+      'GetTodo': grpc.unary_unary_rpc_method_handler(
+          servicer.GetTodo,
+          request_deserializer=todos__pb2.Todo.FromString,
           response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
       'ListAllTodo': grpc.unary_stream_rpc_method_handler(
           servicer.ListAllTodo,
-          request_deserializer=todos__pb2.ListAllTodoRequest.FromString,
+          request_deserializer=todos__pb2.EmptyRequest.FromString,
           response_serializer=todos__pb2.ListAllTodoResponse.SerializeToString,
       ),
       'DeleteTodo': grpc.unary_unary_rpc_method_handler(
           servicer.DeleteTodo,
-          request_deserializer=todos__pb2.DeleteTodoRequest.FromString,
+          request_deserializer=todos__pb2.Todo.FromString,
           response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
       'EditTodo': grpc.unary_unary_rpc_method_handler(
           servicer.EditTodo,
-          request_deserializer=todos__pb2.EditTodoRequest.FromString,
+          request_deserializer=todos__pb2.Todo.FromString,
           response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
       'ToggleStatus': grpc.unary_unary_rpc_method_handler(
           servicer.ToggleStatus,
-          request_deserializer=todos__pb2.ToggleStatusRequest.FromString,
+          request_deserializer=todos__pb2.Todo.FromString,
           response_serializer=todos__pb2.TodoResponse.SerializeToString,
       ),
   }
